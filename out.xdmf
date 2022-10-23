@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>
+<Xdmf Version="3.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <Domain>
+    <Grid Name="mesh" GridType="Uniform">
+      <Topology TopologyType="Triangle" NumberOfElements="128" NodesPerElement="3">
+        <DataItem Dimensions="128 3" NumberType="Int" Format="HDF">out.h5:/Mesh/mesh/topology</DataItem>
+      </Topology>
+      <Geometry GeometryType="XY">
+        <DataItem Dimensions="81 2" Format="HDF">out.h5:/Mesh/mesh/geometry</DataItem>
+      </Geometry>
+    </Grid>
+    <Grid Name="function_u" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="0" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/0</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="1" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/1</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="2" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/2</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="3" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/3</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="4" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/4</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="5" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/5</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="6" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/6</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="7" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/7</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="8" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/8</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="function_u" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="9" />
+        <Attribute Name="function_u" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="81 1" Format="HDF">out.h5:/Function/function_u/9</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+  </Domain>
+</Xdmf>
