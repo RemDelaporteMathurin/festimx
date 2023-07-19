@@ -3,7 +3,7 @@ from mpi4py import MPI
 import ufl
 from dolfinx.io import XDMFFile
 from petsc4py import PETSc
-from ufl import inner, dx, grad, dot, dS, jump, avg, ds
+from ufl import dx, grad, dot, jump, avg
 import numpy as np
 
 msh = mesh.create_unit_square(MPI.COMM_WORLD, 8, 8)
@@ -12,15 +12,27 @@ V = fem.FunctionSpace(msh, ("DG", 1))
 uD = fem.Function(V)
 uD.interpolate(lambda x: np.full(x[0].shape, 0.0))
 
+# create mesh tags
+def marker_interface(x):
+    return np.isclose(x[0], 0.5)
 
 tdim = msh.topology.dim
 fdim = tdim - 1
 msh.topology.create_connectivity(fdim, tdim)
+facet_imap = msh.topology.index_map(tdim - 1)
 boundary_facets = mesh.exterior_facet_indices(msh.topology)
-boundary_dofs = fem.locate_dofs_topological(V, fdim, boundary_facets)
+interface_facets = mesh.locate_entities_boundary(msh, tdim - 1, marker_interface)
+num_facets = facet_imap.size_local + facet_imap.num_ghosts
+indices = np.arange(0, num_facets)
+values = np.arange(0, num_facets, dtype=np.intc)
 
-# bc = fem.dirichletbc(uD, boundary_dofs)
+values[boundary_facets] = 1
+values[interface_facets] = 2
 
+mesh_tags_facets = mesh.meshtags(msh, tdim - 1, indices, values) 
+
+ds = ufl.Measure("ds", domain=msh, subdomain_data=mesh_tags_facets)
+dS = ufl.Measure("dS", domain=msh, subdomain_data=mesh_tags_facets)
 
 u = fem.Function(V)
 u_n = fem.Function(V)
@@ -39,10 +51,6 @@ f = fem.Constant(msh, PETSc.ScalarType(2.0))
 # Define variational problem
 
 F = 0
-
-# transient term
-# delta_t = fem.Constant(msh, PETSc.ScalarType(0.1))
-# F += inner((u-u_n) / delta_t, v) * dx
 
 # diffusion
 F += dot(grad(v), grad(u))*dx - dot(v*n, grad(u))*ds \
@@ -67,14 +75,10 @@ xdmf_file.write_mesh(msh)
 xdmf_file.write_function(u)
 
 
-import dolfinx.plot
 import pyvista
 pyvista.OFF_SCREEN = True
 
 pyvista.start_xvfb()
-# We create a mesh consisting of the degrees of freedom for visualization
-topology, cell_types, geometry = dolfinx.plot.create_vtk_mesh(msh, tdim)
-grid = pyvista.UnstructuredGrid(topology, cell_types, geometry)
 
 u_topology, u_cell_types, u_geometry = plot.create_vtk_mesh(V)
 u_grid = pyvista.UnstructuredGrid(u_topology, u_cell_types, u_geometry)
