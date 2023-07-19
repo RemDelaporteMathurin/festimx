@@ -27,7 +27,7 @@ my_expr = CustomExpression()
 tdim = domain.topology.dim
 fdim = tdim - 1
 domain.topology.create_connectivity(fdim, tdim)
-boundary_facets = np.flatnonzero(mesh.compute_boundary_facets(domain.topology))
+boundary_facets = mesh.exterior_facet_indices(domain.topology)
 
 
 boundary_dofs = fem.locate_dofs_topological(V, fdim, boundary_facets)
