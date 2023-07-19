@@ -21,10 +21,11 @@ fdim = tdim - 1
 msh.topology.create_connectivity(fdim, tdim)
 facet_imap = msh.topology.index_map(tdim - 1)
 boundary_facets = mesh.exterior_facet_indices(msh.topology)
-interface_facets = mesh.locate_entities_boundary(msh, tdim - 1, marker_interface)
+interface_facets = mesh.locate_entities(msh, tdim - 1, marker_interface)
 num_facets = facet_imap.size_local + facet_imap.num_ghosts
 indices = np.arange(0, num_facets)
-values = np.arange(0, num_facets, dtype=np.intc)
+# values = np.arange(0, num_facets, dtype=np.intc)
+values = np.zeros(indices.shape, dtype=np.intc)  # all facets are tagged with zero
 
 values[boundary_facets] = 1
 values[interface_facets] = 2
@@ -54,8 +55,8 @@ F = 0
 
 # diffusion
 F += dot(grad(v), grad(u))*dx - dot(v*n, grad(u))*ds \
-   - dot(avg(grad(v)), jump(u, n))*dS - dot(jump(v, n), avg(grad(u)))*dS \
-   + gamma/avg(h)*dot(jump(v, n), jump(u, n))*dS
+   - dot(avg(grad(v)), jump(u, n))*dS(0) - dot(jump(v, n), avg(grad(u)))*dS(0) \
+   + gamma/avg(h)*dot(jump(v, n), jump(u, n))*dS(0)
 
 # source
 F += -v*f*dx 
@@ -64,6 +65,10 @@ F += -v*f*dx
 F += - dot(grad(v), u*n)*ds + alpha/h*v*u*ds\
    + uD*dot(grad(v), n)*ds - alpha/h*uD*v*ds
 
+K1 = 1
+K2 = 2
+F += u('-')/K1 * v('-') * dS(2) - u('+')/K2 * v('+') * dS(2)
+# F += u('-')/K1 * v('-') * dS(2) - u('+')**2/K2**2 * v('+') * dS(2)
 
 problem = fem.petsc.NonlinearProblem(F, u)
 solver = nls.petsc.NewtonSolver(MPI.COMM_WORLD, problem)
